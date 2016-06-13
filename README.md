@@ -6,7 +6,7 @@ Jazz framework DbConnect component README
 
 ## Override
 
-This is a factory based class. Can store multiple instances of connections.
+This is a factory PDO based class. Can store multiple instances of connections.
 Simple and useful.
 
 
