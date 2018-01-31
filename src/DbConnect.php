@@ -10,16 +10,17 @@ namespace Qwant;
 class DbConnect
 {
     private static $instances = [];
-
+    public $connection;
+    
     private function __construct(array $params)
     {
         try {
-            self::$instances[$params['instanceName']] = new \PDO(
+            $this->connection = new \PDO(
                 "mysql:host=$params[host];dbname=$params[dbname];charset=utf8",
                 "$params[username]",
                 "$params[password]"
             );
-            self::$instances[$params['instanceName']]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
              throw new \Exception(__CLASS__ . " $params[instanceName] " . $e->getMessage());
         }
@@ -35,4 +36,6 @@ class DbConnect
     {
         return self::$instances[$params['instanceName']] ?? self::$instances[$params['instanceName']] = new self($params);
     }
+    
+    
 }
