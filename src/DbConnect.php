@@ -10,7 +10,7 @@ namespace Qwant;
 class DbConnect
 {
     private static $instances = [];
-    public $connection;
+    private $connection;
     
     private function __construct(array $params)
     {
@@ -37,5 +37,8 @@ class DbConnect
         return self::$instances[$params['instanceName']] ?? self::$instances[$params['instanceName']] = new self($params);
     }
     
-    
+    public function getConnection()
+    {
+        return $this->connection;
+    }    
 }
