@@ -1,46 +1,38 @@
-<?php
-
+<?
 
 namespace Qwant;
 
 /**
  * Class DbConnect
  * @package Qwant
- * @author   Sergey Malahov
+ * @author  Sergey Malahov
  */
 class DbConnect
 {
-    private $connection;
-    private static $instances;
+    private static $instances = [];
 
     private function __construct(array $params)
     {
         try {
-            $this->connection = new \PDO(
+            self::$instances[$params['instanceName']] = new \PDO(
                 "mysql:host=$params[host];dbname=$params[dbname];charset=utf8",
-                $params['username'],
-                $params['password']
+                "$params[username]",
+                "$params[password]"
             );
-            $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            self::$instances[$params['instanceName']]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
-            die(__CLASS__ . " $params[connectionName] " . $e->getMessage());
+             throw new \Exception(__CLASS__ . " $params[instanceName] " . $e->getMessage());
         }
     }
 
     /**
-     * Get instance via connectionName
+     * Get instance via instanceName
      *
      * @param array $params
      * @return DbConnect
      */
     public static function getInstance(array $params)
     {
-        return isset(self::$instances[$params['connectionName']]) ? self::$instances[$params['connectionName']] :
-            self::$instances[$params['connectionName']] = new self($params);
-    }
-
-    public function getConnection()
-    {
-        return $this->connection;
+        return self::$instances[$params['instanceName']] ?? self::$instances[$params['instanceName']] = new self($params);
     }
 }
